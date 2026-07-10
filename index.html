@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NutriCore — Evidence-Based Nutrition</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d1f1a;
+    --sage: #3a6b5a;
+    --sage-light: #5a9078;
+    --cream: #f5f0e8;
+    --gold: #c9a84c;
+    --white: #ffffff;
+    --muted: #6b7c76;
+    --border: rgba(58,107,90,0.15);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(245,240,232,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; font-weight: 900;
+    color: var(--sage);
+    letter-spacing: -0.02em;
+  }
+  .logo span { color: var(--gold); }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--ink);
+    font-size: 0.9rem; font-weight: 500; letter-spacing: 0.03em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--sage); }
+
+  .nav-cta {
+    background: var(--sage); color: var(--white);
+    padding: 0.65rem 1.6rem; border-radius: 50px;
+    text-decoration: none; font-size: 0.9rem; font-weight: 600;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .nav-cta:hover { background: var(--sage-light); transform: translateY(-1px); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    padding: 8rem 4rem 4rem;
+    gap: 4rem; align-items: center;
+    position: relative; overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; top: -200px; right: -200px;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(58,107,90,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(58,107,90,0.1); border: 1px solid var(--border);
+    color: var(--sage); font-size: 0.8rem; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.4rem 1rem; border-radius: 50px;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.8s ease forwards;
+  }
+
+  .hero-tag::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold);
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 5vw, 4.5rem);
+    font-weight: 900; line-height: 1.08;
+    letter-spacing: -0.03em;
+    animation: fadeUp 0.9s 0.1s ease both;
+  }
+
+  h1 em { color: var(--sage); font-style: italic; }
+
+  .hero-sub {
+    margin-top: 1.5rem;
+    font-size: 1.15rem; line-height: 1.7;
+    color: var(--muted); max-width: 480px;
+    font-weight: 300;
+    animation: fadeUp 1s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1rem; align-items: center;
+    margin-top: 2.5rem;
+    animation: fadeUp 1s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--sage); color: var(--white);
+    padding: 1rem 2.2rem; border-radius: 50px;
+    text-decoration: none; font-weight: 600; font-size: 1rem;
+    transition: all 0.25s; border: none; cursor: pointer;
+    box-shadow: 0 4px 20px rgba(58,107,90,0.3);
+  }
+  .btn-primary:hover { background: var(--sage-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(58,107,90,0.35); }
+
+  .btn-ghost {
+    color: var(--ink); font-weight: 500; font-size: 1rem;
+    text-decoration: none; display: flex; align-items: center; gap: 0.5rem;
+    transition: color 0.2s;
+  }
+  .btn-ghost:hover { color: var(--sage); }
+  .btn-ghost::after { content: '→'; transition: transform 0.2s; }
+  .btn-ghost:hover::after { transform: translateX(4px); }
+
+  .hero-stats {
+    display: flex; gap: 2.5rem; margin-top: 3rem;
+    animation: fadeUp 1s 0.4s ease both;
+  }
+
+  .stat-item { }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700; color: var(--sage);
+  }
+  .stat-label { font-size: 0.82rem; color: var(--muted); margin-top: 0.2rem; }
+
+  /* HERO VISUAL */
+  .hero-visual {
+    position: relative;
+    animation: fadeIn 1.2s 0.3s ease both;
+  }
+
+  .pill-card {
+    background: var(--white);
+    border-radius: 24px;
+    padding: 2.5rem;
+    box-shadow: 0 20px 60px rgba(13,31,26,0.1);
+    position: relative; overflow: hidden;
+  }
+
+  .pill-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--sage), var(--gold));
+  }
+
+  .pill-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .pill-card-title::before { content: '⚗️'; font-size: 1.2rem; }
+
+  .interaction-item {
+    display: flex; align-items: flex-start; gap: 1rem;
+    padding: 1rem; border-radius: 12px;
+    background: var(--cream); margin-bottom: 0.8rem;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s;
+  }
+  .interaction-item:hover { border-color: var(--sage); }
+
+  .interaction-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; flex-shrink: 0;
+  }
+
+  .icon-safe { background: rgba(58,107,90,0.15); }
+  .icon-caution { background: rgba(201,168,76,0.2); }
+  .icon-avoid { background: rgba(200,60,60,0.12); }
+
+  .interaction-text { }
+  .interaction-label { font-weight: 600; font-size: 0.88rem; }
+  .interaction-desc { font-size: 0.8rem; color: var(--muted); margin-top: 0.15rem; }
+
+  .badge {
+    display: inline-block; padding: 0.2rem 0.6rem;
+    border-radius: 50px; font-size: 0.72rem; font-weight: 600;
+  }
+  .badge-safe { background: rgba(58,107,90,0.15); color: var(--sage); }
+  .badge-caution { background: rgba(201,168,76,0.2); color: #8a6e1e; }
+  .badge-avoid { background: rgba(200,60,60,0.12); color: #b03030; }
+
+  /* FLOATING CARDS */
+  .float-card {
+    position: absolute;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 1rem 1.4rem;
+    box-shadow: 0 10px 40px rgba(13,31,26,0.12);
+    font-size: 0.85rem; font-weight: 600;
+    display: flex; align-items: center; gap: 0.6rem;
+    white-space: nowrap;
+  }
+
+  .float-card-1 {
+    top: -20px; right: -20px;
+    animation: float 4s ease-in-out infinite;
+  }
+
+  .float-card-2 {
+    bottom: -20px; left: -20px;
+    animation: float 4s ease-in-out infinite 2s;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  /* TRUST BAR */
+  .trust-bar {
+    background: var(--sage);
+    padding: 1.5rem 4rem;
+    display: flex; align-items: center; justify-content: center; gap: 4rem;
+    overflow: hidden;
+  }
+
+  .trust-item {
+    color: rgba(255,255,255,0.85);
+    font-size: 0.85rem; font-weight: 500;
+    display: flex; align-items: center; gap: 0.6rem;
+    white-space: nowrap;
+  }
+
+  .trust-item span { font-size: 1.1rem; }
+
+  /* FEATURES */
+  .section {
+    padding: 6rem 4rem;
+  }
+
+  .section-label {
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 0.8rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 900; line-height: 1.15;
+    letter-spacing: -0.02em;
+    max-width: 560px;
+  }
+
+  .features-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem; margin-top: 4rem;
+  }
+
+  .feature-card {
+    background: var(--white);
+    border-radius: 20px; padding: 2rem;
+    border: 1px solid var(--border);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative; overflow: hidden;
+  }
+
+  .feature-card::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--sage), var(--gold));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .feature-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(13,31,26,0.1); }
+  .feature-card:hover::after { transform: scaleX(1); }
+
+  .feature-icon {
+    font-size: 2rem; margin-bottom: 1.2rem;
+    width: 60px; height: 60px; border-radius: 16px;
+    background: var(--cream); display: flex;
+    align-items: center; justify-content: center;
+  }
+
+  .feature-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem; font-weight: 700; margin-bottom: 0.7rem;
+  }
+
+  .feature-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.65; }
+
+  /* HOW IT WORKS */
+  .hiw-section {
+    background: var(--ink);
+    padding: 6rem 4rem;
+    position: relative; overflow: hidden;
+  }
+
+  .hiw-section::before {
+    content: '';
+    position: absolute; top: -300px; right: -300px;
+    width: 700px; height: 700px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(58,107,90,0.25) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hiw-section .section-title { color: var(--white); }
+  .hiw-section .section-label { color: var(--gold); }
+
+  .steps-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 2rem; margin-top: 4rem;
+  }
+
+  .step-card {
+    position: relative;
+  }
+
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem; font-weight: 900;
+    color: rgba(255,255,255,0.07); line-height: 1;
+    margin-bottom: -1rem;
+  }
+
+  .step-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem; font-weight: 700;
+    color: var(--white); margin-bottom: 0.6rem;
+  }
+
+  .step-desc { font-size: 0.88rem; color: rgba(255,255,255,0.55); line-height: 1.65; }
+
+  .step-icon {
+    font-size: 1.6rem; margin-bottom: 1rem;
+    display: flex; align-items: center;
+  }
+
+  /* TESTIMONIALS */
+  .testimonials { padding: 6rem 4rem; }
+
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem; margin-top: 4rem;
+  }
+
+  .testi-card {
+    background: var(--white); border-radius: 20px; padding: 2rem;
+    border: 1px solid var(--border);
+  }
+
+  .testi-stars { color: var(--gold); font-size: 1rem; margin-bottom: 1rem; }
+
+  .testi-quote {
+    font-size: 0.95rem; line-height: 1.7; color: var(--ink);
+    font-style: italic; margin-bottom: 1.5rem;
+  }
+
+  .testi-author { display: flex; align-items: center; gap: 0.8rem; }
+
+  .testi-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--sage), var(--gold));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; color: white; font-size: 1rem;
+  }
+
+  .testi-name { font-weight: 600; font-size: 0.9rem; }
+  .testi-role { font-size: 0.8rem; color: var(--muted); }
+
+  /* CTA */
+  .cta-section {
+    margin: 0 4rem 6rem;
+    background: linear-gradient(135deg, var(--sage), #2a5040);
+    border-radius: 32px; padding: 5rem;
+    text-align: center; position: relative; overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute; top: -100px; left: 50%;
+    transform: translateX(-50%);
+    width: 500px; height: 500px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.2) 0%, transparent 70%);
+  }
+
+  .cta-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 900; color: var(--white);
+    letter-spacing: -0.02em; margin-bottom: 1rem;
+    position: relative;
+  }
+
+  .cta-section p {
+    color: rgba(255,255,255,0.75); font-size: 1.1rem;
+    max-width: 500px; margin: 0 auto 2.5rem; line-height: 1.7;
+    position: relative;
+  }
+
+  .cta-btn {
+    background: var(--gold); color: var(--ink);
+    padding: 1.1rem 2.8rem; border-radius: 50px;
+    text-decoration: none; font-weight: 700; font-size: 1rem;
+    display: inline-block; transition: all 0.25s;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(201,168,76,0.4);
+  }
+  .cta-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(201,168,76,0.45); }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink); color: rgba(255,255,255,0.6);
+    padding: 3rem 4rem;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.85rem;
+  }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-weight: 900; color: var(--white);
+  }
+  .footer-logo span { color: var(--gold); }
+
+  .footer-links { display: flex; gap: 2rem; }
+  .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--white); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* SCROLL ANIMATIONS */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; padding: 6rem 1.5rem 3rem; }
+    .hero-visual { display: none; }
+    .section { padding: 4rem 1.5rem; }
+    .features-grid, .steps-grid, .testimonials-grid { grid-template-columns: 1fr; }
+    .trust-bar { gap: 1.5rem; padding: 1.5rem; flex-wrap: wrap; }
+    .cta-section { margin: 0 1.5rem 4rem; padding: 3rem 2rem; }
+    footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+    .hiw-section { padding: 4rem 1.5rem; }
+    .testimonials { padding: 4rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Nutri<span>Core</span></div>
+  <ul class="nav-links">
+    <li><a href="#features">How It Works</a></li>
+    <li><a href="#science">The Science</a></li>
+    <li><a href="#testimonials">Stories</a></li>
+    <li><a href="#plans">Plans</a></li>
+  </ul>
+  <a href="#cta" class="nav-cta">Get Started here</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">Clinically Validated Protocols</div>
+    <h1>Nutrition That <em>Works With</em> Your Medicines</h1>
+    <p class="hero-sub">Evidence-based supplement guidance personalized to your medications, health conditions, and nutritional gaps — reviewed by pharmacists and dietitians.</p>
+    <div class="hero-actions">
+      <a href="#cta" class="btn-primary">Start My Assessment</a>
+      <a href="#features" class="btn-ghost">See How It Works</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">15,000+</div>
+        <div class="stat-label">Drug-nutrient interactions mapped</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">98%</div>
+        <div class="stat-label">Safe protocol compliance</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">50+</div>
+        <div class="stat-label">Clinical advisors</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="float-card float-card-1">✅ Magnesium — Safe with Metformin</div>
+    <div class="pill-card">
+      <div class="pill-card-title">Your Interaction Report</div>
+
+      <div class="interaction-item">
+        <div class="interaction-icon icon-safe">🌿</div>
+        <div class="interaction-text">
+          <div class="interaction-label">Omega-3 + Atorvastatin</div>
+          <div class="interaction-desc">Beneficial combination — reduces cardiovascular risk</div>
+        </div>
+        <span class="badge badge-safe">Safe</span>
+      </div>
+
+      <div class="interaction-item">
+        <div class="interaction-icon icon-caution">⚠️</div>
+        <div class="interaction-text">
+          <div class="interaction-label">Vitamin K2 + Warfarin</div>
+          <div class="interaction-desc">Requires dosage monitoring — consult physician</div>
+        </div>
+        <span class="badge badge-caution">Monitor</span>
+      </div>
+
+      <div class="interaction-item">
+        <div class="interaction-icon icon-avoid">🚫</div>
+        <div class="interaction-text">
+          <div class="interaction-label">St. John's Wort + SSRIs</div>
+          <div class="interaction-desc">Significant serotonin risk — avoid completely</div>
+        </div>
+        <span class="badge badge-avoid">Avoid</span>
+      </div>
+
+      <div class="interaction-item">
+        <div class="interaction-icon icon-safe">💊</div>
+        <div class="interaction-text">
+          <div class="interaction-label">B12 + Metformin</div>
+          <div class="interaction-desc">Supplementation recommended to prevent depletion</div>
+        </div>
+        <span class="badge badge-safe">Recommended</span>
+      </div>
+    </div>
+    <div class="float-card float-card-2">🧪 Reviewed by Pharmacist</div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item"><span>🏥</span> Pharmacist-Reviewed</div>
+  <div class="trust-item"><span>📋</span> Registered Dietitian Protocols</div>
+  <div class="trust-item"><span>🔬</span> Peer-Reviewed Research</div>
+  <div class="trust-item"><span>🔒</span> HIPAA Compliant</div>
+  <div class="trust-item"><span>🌍</span> 40,000+ Users Worldwide</div>
+</div>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-label">What We Do</div>
+  <h2 class="section-title">Where Nutrition Meets Clinical Precision</h2>
+
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <div class="feature-icon">💊</div>
+      <div class="feature-title">Drug–Nutrient Interaction Screening</div>
+      <p class="feature-desc">Our database cross-references your medications against 15,000+ known supplement interactions, flagging risks before they become problems.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🧬</div>
+      <div class="feature-title">Nutrient Depletion Analysis</div>
+      <p class="feature-desc">Many medications silently deplete key vitamins and minerals. We identify these gaps and recommend safe, effective replenishment strategies.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🥗</div>
+      <div class="feature-title">Personalized Meal Protocols</div>
+      <p class="feature-desc">Evidence-based meal plans designed around your medications, health goals, and dietary preferences — not generic advice.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">👩‍⚕️</div>
+      <div class="feature-title">Expert Clinical Review</div>
+      <p class="feature-desc">Every protocol is reviewed by licensed pharmacists and registered dietitians before reaching you. Real expertise, not algorithms alone.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">📊</div>
+      <div class="feature-title">Progress Biomarker Tracking</div>
+      <p class="feature-desc">Track labs, symptoms, and nutritional markers over time. Know what's working and adjust with precision.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🔄</div>
+      <div class="feature-title">Ongoing Protocol Updates</div>
+      <p class="feature-desc">As your medications or health status changes, your nutrition plan automatically adapts — keeping you safe and optimized.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="hiw-section" id="science">
+  <div class="section-label">The Process</div>
+  <h2 class="section-title">Four Steps to Nutritional Clarity</h2>
+
+  <div class="steps-grid">
+    <div class="step-card reveal">
+      <div class="step-num">01</div>
+      <div class="step-icon">📝</div>
+      <div class="step-title">Complete Your Health Profile</div>
+      <p class="step-desc">List your medications, health conditions, dietary preferences, and wellness goals in our secure, HIPAA-compliant intake form.</p>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-num">02</div>
+      <div class="step-icon">🔬</div>
+      <div class="step-title">Clinical Interaction Screening</div>
+      <p class="step-desc">Our system cross-references your profile against our clinical database, identifying risks, depletions, and opportunities.</p>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-num">03</div>
+      <div class="step-icon">👩‍⚕️</div>
+      <div class="step-title">Expert Review & Protocol Build</div>
+      <p class="step-desc">A pharmacist and dietitian review your case and build a personalized supplement and nutrition protocol tailored to you.</p>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-num">04</div>
+      <div class="step-icon">📈</div>
+      <div class="step-title">Monitor, Adjust, Thrive</div>
+      <p class="step-desc">Track your progress, receive quarterly reviews, and adjust your protocol as your health journey evolves.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="section-label">Real People, Real Results</div>
+  <h2 class="section-title">Stories from Our Community</h2>
+
+  <div class="testimonials-grid">
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"I had no idea my blood pressure medication was depleting my CoQ10. NutriCore identified it immediately and my energy levels have completely transformed."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">MR</div>
+        <div>
+          <div class="testi-name">Margaret R.</div>
+          <div class="testi-role">On Lisinopril for 6 years</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"As someone managing Type 2 diabetes, I was nervous about supplements. NutriCore gave me a safe, clear plan that my endocrinologist actually praised."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">DK</div>
+        <div>
+          <div class="testi-name">David K.</div>
+          <div class="testi-role">T2D managed with Metformin</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"Finally, a nutrition service that takes my medication list seriously. The interaction report alone was worth every penny — it caught something my own GP missed."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">SL</div>
+        <div>
+          <div class="testi-name">Sandra L.</div>
+          <div class="testi-role">Taking 4 daily medications</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section" id="cta">
+  <h2>Your Medications Deserve a Nutrition Partner</h2>
+  <p>Get your personalized drug-nutrient interaction report and evidence-based nutrition protocol — reviewed by real clinicians.</p>
+  <a href="#" class="cta-btn">Start My Free Assessment →</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Nutri<span>Core</span></div>
+  <div class="footer-links">
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms of Service</a>
+    <a href="#">Clinical Team</a>
+    <a href="#">Contact</a>
+  </div>
+  <div>© 2025 NutriCore. All rights reserved.</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
